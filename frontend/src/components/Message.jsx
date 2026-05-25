@@ -5,7 +5,7 @@ import { User, Bot, Wrench, CheckCircle2 } from 'lucide-react';
 export default function Message({ message }) {
   const isUser = message.role === 'user';
   
-  if (message.role === 'model' && message.toolCalls) {
+  if (message.role === 'model' && message.toolCalls && message.toolCalls.length > 0) {
     return (
       <div className="flex gap-4 p-4 my-2 text-sm text-slate-400 border border-slate-700/50 rounded-lg bg-slate-800/20">
         <div className="flex-shrink-0 mt-1">
@@ -25,7 +25,7 @@ export default function Message({ message }) {
     );
   }
 
-  if (message.role === 'system' && message.toolResults) {
+  if (message.role === 'system' && message.toolResults && message.toolResults.length > 0) {
     return (
       <div className="flex gap-4 p-4 my-2 text-sm text-slate-400 border border-emerald-900/30 rounded-lg bg-emerald-900/10">
         <div className="flex-shrink-0 mt-1">
@@ -59,7 +59,7 @@ export default function Message({ message }) {
         )}
       </div>
       <div className="flex-grow overflow-hidden">
-        <div className={`prose prose-invert max-w-none ${isUser ? 'prose-p:text-slate-200' : 'prose-p:text-slate-300'}`}>
+        <div className={`markdown-content ${isUser ? 'text-slate-200 font-medium' : 'text-slate-350'}`}>
           {message.content ? (
             <ReactMarkdown>{message.content}</ReactMarkdown>
           ) : (

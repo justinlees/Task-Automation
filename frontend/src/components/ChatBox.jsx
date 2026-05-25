@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Message from './Message';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Bot } from 'lucide-react';
 import { API_URL } from '../services/api';
 
 export default function ChatBox({ conversationId, onNewConversation }) {
@@ -127,7 +127,7 @@ export default function ChatBox({ conversationId, onNewConversation }) {
   return (
     <div className="flex flex-col h-full bg-slate-900 rounded-3xl overflow-hidden border border-slate-700/50 shadow-2xl relative">
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+      <div className="flex-1 overflow-y-auto p-4 md:p-8 pb-32 md:pb-36 scroll-smooth">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-slate-500">
             <div className="w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center">
@@ -155,7 +155,7 @@ export default function ChatBox({ conversationId, onNewConversation }) {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-slate-800/80 backdrop-blur-md border-t border-slate-700/50">
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-slate-900/80 backdrop-blur-md border-t border-slate-800/50">
         <form onSubmit={handleSend} className="relative max-w-4xl mx-auto flex items-end gap-2">
           <div className="relative flex-grow">
             <textarea

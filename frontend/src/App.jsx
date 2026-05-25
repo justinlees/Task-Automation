@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import ChatBox from './components/ChatBox';
 import { fetchConversations, fetchNotes } from './services/api';
 import { MessageSquare, Plus, Menu, X, Sparkles, StickyNote } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 function App() {
   const [conversations, setConversations] = useState([]);
   const [notes, setNotes] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedNote, setSelectedNote] = useState(null);
 
   useEffect(() => {
     loadConversations();
@@ -103,10 +105,14 @@ function App() {
             </h2>
             <div className="flex flex-col gap-2 px-3">
               {notes.map(note => (
-                <div key={note._id} className="bg-slate-800/50 p-3 rounded-xl border border-slate-700/50">
-                  <h3 className="font-medium text-sm text-indigo-300 truncate">{note.title}</h3>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">{note.content}</p>
-                </div>
+                <button 
+                  key={note._id} 
+                  onClick={() => setSelectedNote(note)}
+                  className="bg-slate-800/40 hover:bg-slate-800 p-3 rounded-xl border border-slate-700/50 hover:border-indigo-500/50 transition-all text-left w-full cursor-pointer group"
+                >
+                  <h3 className="font-semibold text-sm text-indigo-300 group-hover:text-indigo-200 truncate">{note.title}</h3>
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-2 group-hover:text-slate-300">{note.content}</p>
+                </button>
               ))}
               {notes.length === 0 && (
                 <div className="py-4 text-sm text-slate-600 text-center italic">
@@ -142,6 +148,45 @@ function App() {
           />
         </div>
       </main>
+
+      {/* Note Details Modal */}
+      {selectedNote && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+          <div 
+            className="fixed inset-0" 
+            onClick={() => setSelectedNote(null)}
+          />
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl relative z-10 animate-in zoom-in-95 duration-200 flex flex-col max-h-[85vh]">
+            <div className="p-6 border-b border-slate-850 flex justify-between items-center bg-slate-900/50 backdrop-blur-sm">
+              <div className="flex items-center gap-2">
+                <StickyNote size={20} className="text-indigo-400" />
+                <h2 className="text-lg font-bold text-slate-100 tracking-tight">{selectedNote.title}</h2>
+              </div>
+              <button 
+                onClick={() => setSelectedNote(null)}
+                className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition-all"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto flex-1 bg-slate-900/20">
+              <div className="markdown-content text-slate-300 text-sm md:text-base font-sans">
+                <ReactMarkdown>{selectedNote.content}</ReactMarkdown>
+              </div>
+            </div>
+            
+            <div className="p-4 bg-slate-950/40 border-t border-slate-850 flex justify-end gap-3">
+              <button 
+                onClick={() => setSelectedNote(null)}
+                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-all font-semibold text-sm shadow-lg shadow-indigo-500/20"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
